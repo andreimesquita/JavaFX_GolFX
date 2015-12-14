@@ -109,6 +109,12 @@ public class LoginApp extends Application {
                 if (txfLogin.getText().equals("admin") &&
                     psfSenha.getText().equals("casadocodigo")) {
                     //TODO Abrir a tela VitrineApp
+                    try {
+                        new VitrineApp().start(new Stage());
+                        LoginApp.getStage().close();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 } else {
                     JOptionPane.showMessageDialog(null, 
                             "Login e/ou senha inválidos", "Erro", JOptionPane.ERROR_MESSAGE);
