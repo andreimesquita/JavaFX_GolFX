@@ -1,6 +1,6 @@
 package com.dgi.login.view;
+import com.dgi.login.view.util.JavaFXApplication;
 import com.dgi.login.util.AlertBox;
-import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -8,12 +8,11 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
-import javax.swing.JOptionPane;
 
 /**
  * @author Andrei
  */
-public class LoginApp extends Application {
+public class LoginApp extends JavaFXApplication {
     private AnchorPane anchorPane;
     private TextField txfLogin;
     private PasswordField psfSenha;
@@ -29,6 +28,7 @@ public class LoginApp extends Application {
      */
     @Override
     public void start(Stage stage) throws Exception {
+        LoginApp.stage = stage;
         initComponents();
         initListeners();
         
@@ -45,10 +45,10 @@ public class LoginApp extends Application {
         stage.show();
         
         initLayout();
-        LoginApp.stage = stage;
     }
     
-    private void initComponents()
+    @Override
+    protected void initComponents()
     {
         //Painel que dá total liberdade na localização dos componentes da UI
         anchorPane = new AnchorPane();
@@ -73,7 +73,8 @@ public class LoginApp extends Application {
         anchorPane.getChildren().addAll(txfLogin, psfSenha, btnEntrar, btnSair);
     }
     
-    private void initLayout()
+    @Override
+    protected void initLayout()
     {
         /*Abaixo são adicionados os códigos que manipulam o tamanho dos elementos
           da tela. É necessário que eles estejam aqui em baixo pois só é 
@@ -93,11 +94,24 @@ public class LoginApp extends Application {
         btnSair.setLayoutY(200);
     }
     
-    private void initListeners()
+    @Override
+    protected void initListeners()
     {
-        btnSair.setOnAction((ActionEvent t) -> {
-            fecharAplicacao();
+        //Listener para o botão fechar
+        stage.setOnCloseRequest(e -> {
+            /*O método "consume" força a janela a não ser fechada quando se
+              pressiona o botão sair. É importante executá-lo sempre que se
+              precisar realizar uma chamada para SetOnCloseRequest de uma janela,
+             visto que a janela irá se fechar de qualquer maneira caso isto não 
+             seja declarado.*/
+            //Basicamente, não premite que a janela se feche automaticamente.
+            e.consume();
+            closeProgram();
         });
+        
+        btnSair.setOnAction((ActionEvent t) -> {
+            closeProgram();
+    });
         
         btnEntrar.setOnAction((ActionEvent t) -> {
             if (txfLogin.getText().equals("admin") &&
@@ -117,9 +131,11 @@ public class LoginApp extends Application {
         });
     }
     
-    private void fecharAplicacao()
+    private void closeProgram()
     {
-        System.exit(0);
+        Boolean answer = AlertBox.displayConfirmBox("Exit", "Are you sure?");
+        if (answer)
+            stage.close();
     }
 
     public static Stage getStage() {
