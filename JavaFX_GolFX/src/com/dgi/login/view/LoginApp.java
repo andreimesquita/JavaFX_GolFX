@@ -1,7 +1,7 @@
 package com.dgi.login.view;
+import com.dgi.login.util.AlertBox;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
@@ -11,7 +11,6 @@ import javafx.stage.Stage;
 import javax.swing.JOptionPane;
 
 /**
- *
  * @author Andrei
  */
 public class LoginApp extends Application {
@@ -96,29 +95,24 @@ public class LoginApp extends Application {
     
     private void initListeners()
     {
-        btnSair.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent t) {
-                fecharAplicacao();
-            }
+        btnSair.setOnAction((ActionEvent t) -> {
+            fecharAplicacao();
         });
         
-        btnEntrar.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent t) {
-                if (txfLogin.getText().equals("admin") &&
+        btnEntrar.setOnAction((ActionEvent t) -> {
+            if (txfLogin.getText().equals("admin") &&
                     psfSenha.getText().equals("casadocodigo")) {
-                    //TODO Abrir a tela VitrineApp
-                    try {
-                        new VitrineApp().start(new Stage());
-                        LoginApp.getStage().close();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                } else {
-                    JOptionPane.showMessageDialog(null, 
-                            "Login e/ou senha inválidos", "Erro", JOptionPane.ERROR_MESSAGE);
+                //TODO Abrir a tela VitrineApp
+                try {
+                    new VitrineApp().start(new Stage());
+                    LoginApp.getStage().close();
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
+            } else {
+                //JOptionPane.showMessageDialog(null,
+                //        "Login e/ou senha inválidos", "Erro", JOptionPane.ERROR_MESSAGE);
+                System.out.println(AlertBox.displayConfirmBox("Erro", "Login e/ou senha inválidos!"));
             }
         });
     }
